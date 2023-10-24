@@ -5,8 +5,8 @@
 #include "vera-spiffs.h"
 #include "vera-spi.h"
 
-const char* ssid = "Politie_Antwerpen";
-const char* password = "Mycarisarenault$%";
+const char* ssid = "";
+const char* password = "";
 
 WebServer server(80);
 
