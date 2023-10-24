@@ -1,3 +1,9 @@
+#include <WiFiManager.h>
+#include <strings_en.h>
+#include <wm_consts_en.h>
+#include <wm_strings_en.h>
+#include <wm_strings_es.h>
+
 #include <WiFi.h>
 #include <WebServer.h>
 #include <FS.h>
@@ -28,6 +34,7 @@ void handleFlashVera() {
   } else {
 
     // initialize the pcf2127
+    server.send(200, "text/plain", "Initializing VERA SPI communications with W25Q16 IC ...");
     Serial.println("Initializing VERA SPI communications with W25Q16 IC ...");
     vera_spi_init(10);
 
@@ -64,6 +71,9 @@ void handleFlashVera() {
 
     unsigned long check_file = 0;
     unsigned long check_vera = 0;
+
+    server.send(200, "text/plain", "Flashing your VERA ...");
+    Serial.println("Flashing your VERA ...");
 
     for (unsigned int vera_page = 0; vera_page < vera_page_total; vera_page++) {
       Serial.println();
@@ -104,8 +114,11 @@ void handleFlashVera() {
       }
       Serial.println();
       Serial.println();
+
       Serial.printf("Checksum VERA.BIN: %08x\n", check_file);
       Serial.printf("Checksum VERA    : %08x\n", check_vera);
+
+      server.send(200, "text/plain", "Done flashing your VERA ...");
     }
   }
 }
@@ -137,7 +150,7 @@ void handleFileUpload() {
   } else if (upload.status == UPLOAD_FILE_END) {
     Serial.printf("\nUpload file %s complete\n", filename.c_str());
     file.close();
-    server.send(200, "text/html", "<form method='POST' action='/flash' enctype='multipart/form-data'> <input type='submit' value='Flash' formaction='/flash' formethod='GET'/> </form>");
+    server.send(200, "text/html", "<form method='GET' action='/flash' enctype='multipart/form-data'> <input type='submit' value='Flash' formaction='/flash' formethod='GET'/> </form>");
   }
 }
 
@@ -147,6 +160,32 @@ void handleRoot() {
 
 
 void setup() {
+      //WiFiManager, Local intialization. Once its business is done, there is no need to keep it around
+    WiFiManager wm;
+
+    // reset settings - wipe stored credentials for testing
+    // these are stored by the esp library
+    // wm.resetSettings();
+
+    // Automatically connect using saved credentials,
+    // if connection fails, it starts an access point with the specified name ( "AutoConnectAP"),
+    // if empty will auto generate SSID, if password is blank it will be anonymous AP (wm.autoConnect())
+    // then goes into a blocking loop awaiting configuration and will return success result
+
+    bool res;
+    // res = wm.autoConnect(); // auto generated AP name from chipid
+    // res = wm.autoConnect("AutoConnectAP"); // anonymous ap
+    res = wm.autoConnect("AutoConnectAP","password"); // password protected ap
+
+    if(!res) {
+        Serial.println("Failed to connect");
+        // ESP.restart();
+    } 
+    else {
+        //if you get here you have connected to the WiFi    
+        Serial.println("connected...yeey :)");
+    }
+
   Serial.begin(115200);
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
