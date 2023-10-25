@@ -1,0 +1,16 @@
+void vera_spi_not_busy();
+void vera_spi_power_down();
+void vera_spi_release_power_down();
+void vera_spi_write_enable();
+void vera_spi_write_disable();
+void vera_spi_init(int FLASH_SS);
+byte vera_spi_read(unsigned int page, byte pageAddress);
+void vera_spi_write(unsigned int page, byte pageAddress, byte val);
+void vera_spi_stream_open(unsigned int page, byte pageAddress);
+void vera_spi_stream_write(byte val);
+void vera_spi_stream_close();
+void vera_spi_init_stream_read(unsigned int page, byte pageAddress);
+byte vera_spi_stream_read();
+void vera_spi_close_stream_read();
+void vera_spi_erase_ic();
+byte vera_spi_manufacturer_id();

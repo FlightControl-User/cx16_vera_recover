@@ -1,0 +1,6 @@
+{
+    "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
+        "clang-diagnostic-error"
+    ],
+    "cmake.sourceDirectory": "C:/Users/svenv/OneDrive/Documents/PlatformIO/Projects/VERA - kopie/.pio/libdeps/arduino_nano_esp32/AsyncTCP"
+}

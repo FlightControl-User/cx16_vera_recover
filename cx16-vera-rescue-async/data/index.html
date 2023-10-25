@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>VERA Rescue Server</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <h1>ESP32 Web Server</h1>
+  <p>
+    <form method="post" action= "/upload" enctype='multipart/form-data'><input title="File" type='file' name='file'>
+      <input type='submit' value='Upload'/>
+      <input type="text" id="upload_result"/>
+    </form>
+    
+  </p>
+  <p><form> <input type='submit' onclick="return sendFlash();"> </form></p>
+  <p><a href="/"><textarea title="Status" id="flashupdate" class="textarea"></textarea></a></p>
+
+  <script>
+    if (!!window.EventSource) {
+      var source = new EventSource("/vera");
+      source.onmessage = function(event) {
+        document.getElementById("flashupdate").innerHTML += event.data;
+      };
+    } else {
+      document.getElementById("flashupdate").innerHTML = "Sorry, your browser does not support server-sent events...";
+    }
+
+    const form = document.querySelector('form');
+    form.addEventListener('submit', handleSubmit);
+
+    /** @param {Event} event */
+    function handleSubmit(event) {
+      /** @type {HTMLFormElement} */
+      const form = event.currentTarget;
+      const url = new URL(form.action);
+      const formData = new FormData(form);
+      const searchParams = new URLSearchParams(formData);
+
+      /** @type {Parameters<fetch>[1]} */
+      const fetchOptions = {
+        method: form.method,
+      };
+
+      if (form.method.toLowerCase() === 'post') {
+        if (form.enctype === 'multipart/form-data') {
+          fetchOptions.body = formData;
+        } else {
+          fetchOptions.body = searchParams;
+        }
+      } else {
+        url.search = searchParams;
+      }
+
+      fetch(url, fetchOptions);
+
+      event.preventDefault();
+    }    
+
+    // function sendUpload(file) {
+    //   var xhr = new XMLHttpRequest();
+    //   xhr.open("POST", "/upload", true);
+    //   xhr.file = file;
+    //   xhr.onreadystatechange = function() {
+    //     if (this.readyState == 4 && this.status == 200) {
+    //       document.getElementById("upload_result").innerHTML = this.responseText;
+    //     }
+    //   }
+    //   xhr.send();
+    // }
+    
+    function sendFlash() {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "/flash", true);
+      xhr.send();
+    }
+    </script>
+</body>
+</html>

@@ -72,7 +72,6 @@ void handleFlashVera() {
     unsigned long check_file = 0;
     unsigned long check_vera = 0;
 
-    server.send(200, "text/plain", "Flashing your VERA ...");
     Serial.println("Flashing your VERA ...");
 
     for (unsigned int vera_page = 0; vera_page < vera_page_total; vera_page++) {
@@ -114,11 +113,8 @@ void handleFlashVera() {
       }
       Serial.println();
       Serial.println();
-
       Serial.printf("Checksum VERA.BIN: %08x\n", check_file);
       Serial.printf("Checksum VERA    : %08x\n", check_vera);
-
-      server.send(200, "text/plain", "Done flashing your VERA ...");
     }
   }
 }
