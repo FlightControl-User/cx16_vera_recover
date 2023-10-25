@@ -8,6 +8,6 @@ The process how to do this will be documented here.
 
 I've built 2 version of it.
 - A synchronous web server implementation using Arduino IDE 2.
-- An asynchronous web server implementation using PlatformIO. Reason of platform IO is the necessity to be abe to drop index.html and style.css files (maybe later more) as part of the project. And PlatformIO has built-in facilities to do exactly that.
+- An asynchronous web server implementation using PlatformIO. Reason of platform IO is the necessity to be abe to create index.html and style.css files (maybe later more) as part of the project. And PlatformIO has built-in facilities to do exactly that.
 
 # WORK IN PROGRESS #
