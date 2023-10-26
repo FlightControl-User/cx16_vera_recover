@@ -1,39 +1,52 @@
 /**
  * @file cx16-vera-rescue-async.cpp
- * @author Sven Van de Velde (sven.van.de.velde@telenet.be)
+ * @author Sven Van de Velde (email:sven.van.de.velde@telenet.be)
  * @brief An Arduino Nano ESP32 Asynchronous Web Server to flash the SPI W25Q16 VERA chip of the Commander X16.
  * It's been a long journey ...
  * 
- * @attention
+ * @note **Consult the [cheat sheet](https://docs.arduino.cc/tutorials/nano-esp32/cheat-sheet)** of the Arduino Nano ESP32 for more info.
  * 
- *   - Consult the [cheat sheet](https://docs.arduino.cc/tutorials/nano-esp32/cheat-sheet) of the Arduino Nano ESP32 for more info.
- *  
- *   - This is a **Platform IO** repository. Install PlatformIO first from the VSCODE extensions.
- *   - Open the folder using the PlatformIO GUI. Click on **PlatformIO icon**, then open **Quick Access > PIO Home > Open**.
+ * @note **Open this project in the PlatformIO GUI.**
+ *   - This is a **Platform IO** repository. 
+ *   - Install PlatformIO first from the VSCODE extensions.
+ *   - Open this project folder using the PlatformIO GUI. Click on **PlatformIO icon**, then open **Quick Access > PIO Home > Open**.
  *   - After opening, PlatformIO will scan the folder.
+ * 
+ * @note **Important files**
  *   - The `platformio.ini` file is very important. It contains the settings how the Arduino Nano ESP32 will be flashed.
  *   - An other important file is `app3M_spiffs9M_fact512k_16MB.csv`, it is used to define the partitions of the Arduino Nano ESP32.
+ * 
+ * @note **Install data files on the SPIFFS partition**
  *   - The solution requires a **SPIFFS file partition** to be filled with data (index.html, style.css and the like).
- *       - You will find these files in the data folder in the **CX16-VERA-RESCUE-ASYNC > data folder**.
- *       - Install using **Project Tasks > arduino_nano_esp32 > Upload Filesystem Image**.
- *       - Before you install, ensure you **put the Arduino Nano in 
- *         [bootloader](https://support.arduino.cc/hc/en-us/articles/9810414060188-Reset-the-Arduino-bootloader-on-the-Nano-ESP32) mode**! 
- *         Use a female/female jumper cable to connect the GND PIN with the B1 PIN. You should see a green led. 
- *         Then press the reset button once, you'll hear a sound, and then unplug the jumper cable from one of the PINs. 
- *         A purple led should light up.  
- *       - In the `platformio.ini` file, uncomment the line `; upload_protocol = esptool` ( Delete the `;` ).
- *       - You'll see that in **Project Tasks** the menu options seem to dissapear, but they will come back after a while!
- *       - Once the **Project Tasks** menu options return, click on **Project Tasks > arduino_nano_esp32 > Upload Filesystem Image**.
- *         The file system for the data will be created, and will be uploaded using the esptool.
- *         It needs the `COM6` port of the Arduino Nano ESP32 to flash the **SPIFFS partition** containing the data.
- *         You'll see a lot of verbose logs, and observe the interesting messages.
- *       - Once the SPIFFS partition has been flashed onto the Arduino Nano ESP32, press the reset button the device.
+ *   - You will find these files in the data folder in the **CX16-VERA-RESCUE-ASYNC > data folder**.
+ *   - Install using **Project Tasks > arduino_nano_esp32 > Upload Filesystem Image**.
+ *   - Before you install, ensure you **put the Arduino Nano in 
+ *     [bootloader](https://support.arduino.cc/hc/en-us/articles/9810414060188-Reset-the-Arduino-bootloader-on-the-Nano-ESP32) mode**! 
+ *     Use a female/female jumper cable to connect the GND PIN with the B1 PIN. You should see a green led. 
+ *     Then press the reset button once, you'll hear a sound, and then unplug the jumper cable from one of the PINs. 
+ *     A purple led should light up.  
+ *   - In the `platformio.ini` file, uncomment the line `; upload_protocol = esptool` ( Delete the `;` ).
+ *     Or, alternatively, you can execute the powershell command 
+ *     `. $env:USERPROFILE\.platformio\penv\Scripts\platformio.exe project init --project-option "upload_protocol=esptool" -e arduino_nano_esp32 -s`
+ *     from a terminal window in VSCODE.
+ *   - You'll see that in **Project Tasks** the menu options seem to dissapear, but they will come back after a while!
+ *   - Once the **Project Tasks** menu options return, click on **Project Tasks > arduino_nano_esp32 > Upload Filesystem Image**.
+ *     The file system for the data will be created, and will be uploaded using the esptool.
+ *     It needs the `COM6` port of the Arduino Nano ESP32 to flash the **SPIFFS partition** containing the data.
+ *     You'll see a lot of verbose logs, and observe the interesting messages.
+ *   - Once the SPIFFS partition has been flashed onto the Arduino Nano ESP32, press the reset button the device.
+ * 
+ * @note **Install the web server onto the Arduino Nano ESP32**  
  *   - The solution hosting the web server also needs to be built (compiled and uploaded onto the Arduino Nano ESP32).
- *       - Comment the line `upload_protocol = esptool` in the `platformio.ini` file, by placing a `;` in the front again.
- *       - The Platform IO workspace will rescan again the whole project and the **Project Tasks** will reappear after a while.
- *       - Now click on **Project Tasks > arduino_nano_esp32 > Build**.
- *       - Once done, click on **Project Tasks > arduino_nano_esp32 > Upload**.
- *       - The upload happens with the ´DFU tool´, which uses the `COM7` port of the Arduino Nano ESP32. No bootloader mode is required.
+ *   - Comment the line `upload_protocol = esptool` in the `platformio.ini` file, by placing a `;` in the front again.
+ *     Or, alternatively, you can execute the powershell command 
+ *     `. $env:USERPROFILE\.platformio\penv\Scripts\platformio.exe project init --project-option "upload_protocol=dfu" -e arduino_nano_esp32 -s`
+ *   - The Platform IO workspace will rescan again the whole project and the **Project Tasks** will reappear after a while.
+ *   - Now click on **Project Tasks > arduino_nano_esp32 > Build**.
+ *   - Once done, click on **Project Tasks > arduino_nano_esp32 > Upload**.
+ *   - The upload happens with the ´DFU tool´, which uses the `COM7` port of the Arduino Nano ESP32. No bootloader mode is required.
+ * 
+ * @note **Run the web server and use it**
  *   - Once the build has happened, it should run the web server on your Arduino Nano ESP32.
  *   - It hosts a WIFI provisioning solution. Find in your WIFI on your computer an ConnectAP SSID, and connect.
  *   - A web page should open from where you can select your WIFI SSID and enter your password.
